@@ -11,8 +11,10 @@ namespace ApiLibro
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            // Ignora rutas relacionadas con archivos del sistema (.axd)
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // Define la ruta principal de la aplicación MVC
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

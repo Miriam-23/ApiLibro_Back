@@ -41,14 +41,17 @@ namespace ApiLibro.Controllers
         {
         }*/
 
+        //Instancia para acceder a la base de datos
         UsuariosDAO dao = new UsuariosDAO();
 
         [HttpPost]
         [Route("login")]
         public IHttpActionResult Login(LoginDTO login)
         {
+            // Busca el usuario en la base de datos
             var user = dao.GetByUsuario(login.Usuario);
 
+            // Si no existe el usuario marcara error
             if (user == null)
             {
                 return Unauthorized();
@@ -60,6 +63,7 @@ namespace ApiLibro.Controllers
                 return Unauthorized();
             }
 
+            // Si las credenciales son correctas, devuelve los datos del usuario
             return Ok(new
             {
                 id = user.Id,

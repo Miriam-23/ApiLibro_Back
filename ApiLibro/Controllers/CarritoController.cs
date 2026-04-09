@@ -12,15 +12,17 @@ using System.Web.Http.Cors;
 
 namespace ApiLibro.Controllers
 {
+    // Se habilita CORS para permitir conexión con el frontend
     [EnableCors(origins: "https://localhost:44367", headers: "*", methods: "*")]
     [RoutePrefix("api/carrito")]
     public class CarritoController : ApiController
     {
         CarritoDAO dao = new CarritoDAO();
+
         //OBTENER TODOS LOS DATOS GET api/<controller>
-        public IEnumerable<Carrito> Get()
+        public IEnumerable<Carrito> Get() 
         {
-            return dao.GetAll();
+            return dao.GetAll();//Se obtiene todos los registros del carrito
         }
 
         //OBTENER POR ID GET api/<controller>/5
@@ -32,22 +34,22 @@ namespace ApiLibro.Controllers
         //OBTENER DATOS POR ID DE USUARIO GET api/<controller>/5
         [HttpGet]
         [Route("usuario/{userId}")]
-        public IHttpActionResult GetCarrito(int userId)
+        public IHttpActionResult GetCarrito(int userId) //Se obtiene carrito de un usuario
         {
             var lista = dao.GetByUserId(userId);
             return Ok(lista);
         }
 
         //INSERTAR POST api/<controller>
-        public void Post(Carrito  carrito)
+        public void Post(Carrito  carrito) 
         {
-            dao.Insert(carrito);
+            dao.Insert(carrito); //Agrega producto al carrito
         }
 
         //ACTUALIZAR PUT api/<controller>/5
         public void Put(int id, Carrito carrito)
         {
-            dao.Update(id, carrito);
+            dao.Update(id, carrito); //Actualiza un producto del carrito
         }
 
         // DELETE api/carrito/usuario/{id} - vaciar carrito tras compra
@@ -62,7 +64,7 @@ namespace ApiLibro.Controllers
         // DELETE api/<controller>/5
         public void Delete(int id)
         {
-            dao.Delete(id);
+            dao.Delete(id); //Elimina un producto en especifico
         }
     }
 }

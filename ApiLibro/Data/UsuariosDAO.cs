@@ -10,20 +10,28 @@ namespace ApiLibro.Data
 {
     public class UsuariosDAO
     {
+        //conexion con la base de datos
         string connectionString =
             ConfigurationManager.ConnectionStrings["LibreriaDBConnection"].ConnectionString;
+        
         // GET ALL
-        public List<Usuarios> GetAll()
+        public List<Usuarios> GetAll()//metodos para obtener los usuarios de la base de datos
         {
+            //se crea una lista vacía donde se guardarán los usuarios
             List<Usuarios> lista = new List<Usuarios>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                //consulta SQL para obtener todos los registros
                 string query = "SELECT * FROM Usuarios";
+                //se crea el comando SQL asociado a la conexion
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
+                // Se ejecuta la consulta y se obtiene un lector de datos
                 SqlDataReader reader = cmd.ExecuteReader();
+                //se recorren todas las filas del resultado
                 while (reader.Read())
                 {
+                    //se crea un objeto Usuarios por cada fila
                     lista.Add(new Usuarios()
                     {
                         Id = (int)reader["Id"],
@@ -34,22 +42,26 @@ namespace ApiLibro.Data
                     });
                 }
             }
-            return lista;
+            return lista; //se devuelve la lista completa de usuarios
         }
 
         // GET BY ID
-        public Usuarios GetByUsuario(string usuario)
+        public Usuarios GetByUsuario(string usuario)//metodo que busca un usuario por su nombre
         {
+            //variable donde se guardará el usuario encontrado
             Usuarios U = null;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                // Consulta SQL con parametros
                 string query = "SELECT * FROM Usuarios WHERE Usuario=@usuario";
                 SqlCommand cmd = new SqlCommand(query, conn);
+                // Se asigna el valor al parámetro
                 cmd.Parameters.AddWithValue("@usuario", usuario);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
+                    // Se instancia el objeto
                     U = new Usuarios()
                     {
 
@@ -61,7 +73,7 @@ namespace ApiLibro.Data
                     };
                 }
             }
-            return U;
+            return U;// Retorna el usuario
         }
 
         // INSERT

@@ -14,15 +14,17 @@ namespace ApiLibro.Controllers
     public class VentasController : ApiController
     {
         VentasDAO dao = new VentasDAO();
+        
         // GET api/<controller>
-        public IEnumerable<Ventas> Get()
+        public IEnumerable<Ventas> Get() //devuelve la lista de todas las ventas registradas
         {
+            //retorna la coleccion de ventas 
             return dao.GetAll();
         }
 
         // GET api/<controller>/5
-        public Ventas Get(int id)
-        {
+        public Ventas Get(int id)//obtiene una venta especifica por medio del id
+        {           
             return dao.GetById(id);
         }
 
@@ -32,11 +34,13 @@ namespace ApiLibro.Controllers
             dao.Insert(ventas);
             return;
         }*/
+
+        
         [HttpPost]
-        public IHttpActionResult Post(Ventas ventas)
+        public IHttpActionResult Post(Ventas ventas)//se registra una nueva venta
         {
-            dao.Insert(ventas);
-            return Ok(ventas);
+            dao.Insert(ventas);// se inserta la venta en la base de datos 
+            return Ok(ventas);// devuelve la confirmacion 
         }
 
         // PUT api/<controller>/5
