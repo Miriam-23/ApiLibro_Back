@@ -14,15 +14,18 @@ namespace ApiLibro.Controllers
     public class UsuariosController : ApiController
     {
         UsuariosDAO dao = new UsuariosDAO();
+
         // GET api/<controller>
-        public IEnumerable<Usuarios> Get()
+        public IEnumerable<Usuarios> Get()//metodo para obtener la lista completa de registros
         {
+            //devuelve todos los usuarios existentes
             return dao.GetAll();
         }
 
         // GET api/<controller>/5
-        public Usuarios Get(string usuario)
+        public Usuarios Get(string usuario)// se obtiene usuario por nombre
         {
+            // devulve el usuario que coincida con el nombre 
             return dao.GetByUsuario(usuario);
         }
 

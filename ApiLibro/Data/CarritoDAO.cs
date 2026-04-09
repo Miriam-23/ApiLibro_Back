@@ -11,46 +11,54 @@ namespace ApiLibro.Data
 {
     public class CarritoDAO
     {
+        //conexion del servidor  
         string connectionString =
             ConfigurationManager.ConnectionStrings["LibreriaDBConnection"].ConnectionString;
+        
         // GET ALL
-        public List<Carrito> GetAll()
+        public List<Carrito> GetAll() //metodo para obtener todos los elementos de carrito
         {
+            //se guardan los resultados en la lista  
             List<Carrito> lista = new List<Carrito>();
+
+            //se hace conexion con la base de datos
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                //consulta de SQL
                 string query = "SELECT * FROM Carrito";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
+
+                ////se crea un objeto carrito por cada fila y se agrega a la lista
                 while (reader.Read())
                 {
                     lista.Add(new Carrito()
                     {
 
-                        Id = (int)reader["Id"],
-                        UserId = (int)reader["UserId"],
-                        LibroId = (int)reader["LibroId"],
-                        Cantidad = (int)reader["Cantidad"],
-                        Precio = (decimal)reader["Precio"]
+                        Id = (int)reader["Id"], //se obtiene id
+                        UserId = (int)reader["UserId"], //id del usuario
+                        LibroId = (int)reader["LibroId"],//id del libro
+                        Cantidad = (int)reader["Cantidad"],//cantidad de producto
+                        Precio = (decimal)reader["Precio"] //precio unitario 
 
                     });
                 }
             }
-            return lista;
+            return lista; //regresa la lista completa 
         }
 
         // GET BY USERID
-        public Carrito GetById(int Id)
+        public Carrito GetById(int Id) //metodo que busca un elemento por su id 
         {
-            Carrito C = null;
+            Carrito C = null; //objeto a retornar
             List<CarritoDTO> lista = new List<CarritoDTO>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-
+                //consulta SQL con parametros
                 string query = "SELECT * FROM Carrito WHERE Id = @id;";
-
                 SqlCommand cmd = new SqlCommand(query, conn);
+                //evita ataques de Inyección SQL
                 cmd.Parameters.AddWithValue("@id", Id);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -58,26 +66,26 @@ namespace ApiLibro.Data
                 {
                     C = new Carrito()
                     {
-                        Id = (int)(reader["Id"]),
-                        UserId = (int)reader["UserId"],
-                        LibroId = (int)reader["LibroId"],
-                        Cantidad = (int)reader["Cantidad"],
-                        Precio = (decimal)reader["Precio"]
+                        Id = (int)(reader["Id"]),//se obtiene id
+                        UserId = (int)reader["UserId"], //id del usuario
+                        LibroId = (int)reader["LibroId"],//id del libro
+                        Cantidad = (int)reader["Cantidad"],//cantidad de producto
+                        Precio = (decimal)reader["Precio"]//precio unitario
 
                     };
                 }
             }
-            return C;
+            return C;//retorna el objeto encontrado
         }
 
 
         // GET BY USERID
-        public List<CarritoDTO> GetByUserId(int userId)
+        public List<CarritoDTO> GetByUserId(int userId)//metodo que obtiene el carrito de un usuario
         {
             List<CarritoDTO> lista = new List<CarritoDTO>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                
+                //consulta para traer la informacion del libro
                 string query = @"SELECT 
                                     C.Id AS Id,
                                     C.UserId AS UserId, 
@@ -94,46 +102,50 @@ namespace ApiLibro.Data
                 cmd.Parameters.AddWithValue("@userId", userId);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
+                //se recorren los resultados
                 while (reader.Read())
                 {
                     lista.Add( new CarritoDTO()
                     {
-                        Id= (int)(reader["Id"]),
-                        UserId = (int)reader["UserId"],
-                        LibroId = (int)reader["LibroId"],
-                        Cantidad = (int)reader["Cantidad"],
-                        Precio = (decimal)reader["Precio"],
-                        Titulo = reader["Titulo"].ToString(),
-                        Imagen = reader["Imagen"].ToString()
+                        Id= (int)(reader["Id"]),//se obtiene id
+                        UserId = (int)reader["UserId"],//id del usuario
+                        LibroId = (int)reader["LibroId"],//id del libro
+                        Cantidad = (int)reader["Cantidad"],//cantidad de producto
+                        Precio = (decimal)reader["Precio"],//precio unitario
+                        Titulo = reader["Titulo"].ToString(),//nombre del libro
+                        Imagen = reader["Imagen"].ToString()//imagen del libro
 
                     });
                 }
             }
-            return lista;
+            return lista; //devuleve la lista del carrito del usuario 
         }
 
         // INSERT
-        public void Insert(Carrito C)
+        public void Insert(Carrito C)// metodo para insertar un nuevo producto al carrito
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                //se inserta un nuevo registro en la tabla carrito
                 string query =
                 "INSERT INTO Carrito (UserId,LibroId,Cantidad,Precio) VALUES(@userid,@libroid,@cantidad,@precio)";
+                //se envian valores como parametros
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@userid", C.UserId);
                 cmd.Parameters.AddWithValue("@libroid", C.LibroId);
                 cmd.Parameters.AddWithValue("@cantidad", C.Cantidad);
                 cmd.Parameters.AddWithValue("@precio", C.Precio);
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();//se ejecuta la insercion
             }
         }
 
         // UPDATE
-        public void Update(int id, Carrito C)
+        public void Update(int id, Carrito C)//metodo para actualizar la cantidad de item en le carrito
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                //se permite modificar la cantidad de un producto basandose en el id
                 string query = "UPDATE Carrito SET Cantidad=@cantidad WHERE Id=@id";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
@@ -146,7 +158,7 @@ namespace ApiLibro.Data
 
         
         // Vaciar carrito tras compra (marca CompraRealizada y borra items)
-        public void VaciarCarrito(int userId)
+        public void VaciarCarrito(int userId)//metodo para finalizar la compra
         {
             using (var conn = new SqlConnection(connectionString))
             {
@@ -165,15 +177,16 @@ namespace ApiLibro.Data
         }
 
         // DELETE
-        public void Delete(int id)
+        public void Delete(int id) //metodo para eliminar el registro
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                //se elimina por id
                 string query = "DELETE FROM Carrito WHERE Id=@id";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();//ejecuta la eliminacion
             }
         }
     }
