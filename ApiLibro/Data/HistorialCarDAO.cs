@@ -84,22 +84,27 @@ namespace ApiLibro.Data
             {
                 //consulta SQL con JOINs para obtener informacion
                 string query = @"SELECT 
-                                    v.Id AS VentaId,
-                                    v.UserId AS UserId,
-                                    v.Fecha AS Fecha,
-                                    v.Total AS Total,
-                                    Hc.Cantidad AS Cantidad,
-                                    Hc.Precio AS Precio,
-                                    l.Titulo AS Titulo
-                                FROM Ventas v
-                                INNER JOIN HistorialCar Hc ON v.CarritoId = Hc.Id
-                                INNER JOIN Libros l ON Hc.LibroId = l.Id;";
+	                                V.Id AS VentaId,
+	                                V.UserId AS UserId,	
+	                                V.Fecha AS Fecha,
+	                                V.Total AS Total,
+	                                HC.Cantidad AS Cantidad,
+	                                HC.Precio AS Precio,
+	                                HC.IdCompra AS IdCompra,
+	                                U.Usuario AS Usuario,
+	                                L.Titulo AS Titulo
+                                FROM Ventas V
+                                INNER JOIN HistorialCar HC ON V.Id = HC.Id
+                                INNER JOIN Usuarios U ON V.UserId = U.Id
+                                INNER JOIN Libros L ON HC.LibroId = L.Id
+                                WHERE V.UserId = @userId";
+
                 // Se crea el comando
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@userId", userId);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
-                //recorre los resultados 
+                //recorre los resultados                 
                 while (reader.Read())
                 {
                     lista.Add(new HistorialCarDTO()
@@ -109,6 +114,7 @@ namespace ApiLibro.Data
                         Fecha = (DateTime)reader["Fecha"],
                         Cantidad = (int)reader["Cantidad"],
                         Precio = (decimal)reader["Precio"],
+                        Usuario = reader["Usuario"].ToString(),
                         Titulo = reader["Titulo"].ToString(),
                         Total = (decimal)reader["Total"]
                     });

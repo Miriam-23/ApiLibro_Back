@@ -12,6 +12,7 @@ namespace ApiLibro.Models
         public DateTime Fecha { get; set; }
         public int Cantidad { get; set; }
         public decimal Precio { get; set; }
+        public string Usuario { get; set; }
         public string Titulo { get; set; }
         public decimal Total { get; set; }
     }
