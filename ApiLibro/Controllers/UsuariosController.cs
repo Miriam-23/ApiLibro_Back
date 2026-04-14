@@ -33,9 +33,29 @@ namespace ApiLibro.Controllers
         // POST api/<controller>
         public void Post([FromBody] string value)
         {
+        }*/
+        [HttpPost]
+        public IHttpActionResult Post(Usuarios usuario)
+        {
+            var resultado = dao.Insert(usuario);
+
+            switch (resultado)
+            {
+                case "usuario_existe":
+                    return BadRequest("El usuario ya existe");
+
+                case "email_existe":
+                    return BadRequest("El correo ya está registrado");
+
+                case "ok":
+                    return Ok("Usuario registrado correctamente");
+
+                default:
+                    return InternalServerError();
+            }
         }
 
-        // PUT api/<controller>/5
+       /* // PUT api/<controller>/5
         public void Put(int id, [FromBody] string value)
         {
         }

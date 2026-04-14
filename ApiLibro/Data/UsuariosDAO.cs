@@ -77,20 +77,44 @@ namespace ApiLibro.Data
         }
 
         // INSERT
-        /*public void Insert(Usuarios U)
+        public string Insert(Usuarios U)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query =
-                "INSERT INTO Usuarios (Usuario,Password,Rol) VALUES(@usuario,@password,@rol)";
+                conn.Open();
+
+                //Verificar usuario
+                string checkUsuario = "SELECT COUNT(*) FROM Usuarios WHERE Usuario = @usuario";
+                SqlCommand cmdCheckUsuario = new SqlCommand(checkUsuario, conn);
+                cmdCheckUsuario.Parameters.AddWithValue("@usuario", U.Usuario);
+
+                int existeUsuario = (int)cmdCheckUsuario.ExecuteScalar();
+                if (existeUsuario > 0)
+                    return "usuario_existe";
+
+                //Verificar email
+                string checkEmail = "SELECT COUNT(*) FROM Usuarios WHERE Email = @email";
+                SqlCommand cmdCheckEmail = new SqlCommand(checkEmail, conn);
+                cmdCheckEmail.Parameters.AddWithValue("@email", U.Email);
+
+                int existeEmail = (int)cmdCheckEmail.ExecuteScalar();
+                if (existeEmail > 0)
+                    return "email_existe";
+
+                //Insertar
+                string query = "INSERT INTO Usuarios (Usuario,Password,Rol,Email) VALUES(@usuario,@password,@rol,@email)";
                 SqlCommand cmd = new SqlCommand(query, conn);
+
                 cmd.Parameters.AddWithValue("@usuario", U.Usuario);
                 cmd.Parameters.AddWithValue("@password", U.Password);
                 cmd.Parameters.AddWithValue("@rol", U.Rol);
-                conn.Open();
+                cmd.Parameters.AddWithValue("@email", U.Email);
+
                 cmd.ExecuteNonQuery();
+
+                return "ok";
             }
-        }*/
+        }
 
         // UPDATE
         /*public void Update(int id, Usuarios U)
