@@ -1,5 +1,6 @@
 ﻿using ApiLibro.Data;
 using ApiLibro.Models;
+using ApiLibro.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace ApiLibro.Controllers
 {
     //habilita cors y permite que el frontend consuma la api
     [EnableCors(origins: "https://localhost:44367", headers: "*", methods: "*")]
+    [CustomAuthorize]
     public class LibroController : ApiController
     {
         // Se crea una instancia del DAO para acceder a la base de datos

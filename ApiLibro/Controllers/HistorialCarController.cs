@@ -1,4 +1,5 @@
 ﻿using ApiLibro.Models;
+using ApiLibro.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace ApiLibro.Data
 {
     //Conexion con el frontend
     [EnableCors(origins: "https://localhost:44367", headers: "*", methods: "*")]
+    [CustomAuthorize]
     [RoutePrefix("api/historialcar")]
     public class HistorialCarController : ApiController
     {

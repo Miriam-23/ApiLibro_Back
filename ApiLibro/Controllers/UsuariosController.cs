@@ -1,5 +1,6 @@
 ﻿using ApiLibro.Data;
 using ApiLibro.Models;
+using ApiLibro.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Web.Http.Cors;
 namespace ApiLibro.Controllers
 {
     [EnableCors(origins: "https://localhost:44367", headers: "*", methods: "*")]
+    [CustomAuthorize]
     public class UsuariosController : ApiController
     {
         UsuariosDAO dao = new UsuariosDAO();

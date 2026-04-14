@@ -34,7 +34,7 @@ namespace ApiLibro.Data
                     lista.Add(new Ventas()
                     {
                         Id = (int)reader["Id"],
-                        CarritoId = (int)reader["CarritoId"],
+                        CompraId = (int)reader["CompraId"],
                         UserId = (int)reader["UserId"],
                         Fecha = (DateTime)reader["Fecha"],
                         Total = (decimal)reader["Total"]
@@ -66,7 +66,7 @@ namespace ApiLibro.Data
                     {
 
                         Id = (int)reader["Id"],
-                        CarritoId = (int)reader["CarritoId"],
+                        CompraId = (int)reader["CompraId"],
                         UserId = (int)reader["UserId"],
                         Fecha = (DateTime)reader["Fecha"],
                         Total = (decimal)reader["Total"]
@@ -84,11 +84,11 @@ namespace ApiLibro.Data
             {
                 // Consulta SQL para insertar una venta
                 string query =
-                "INSERT INTO Ventas (CarritoId,UserId,Total) VALUES(@CarritoId,@userId,@total)";
+                "INSERT INTO Ventas (CompraId,UserId,Total) VALUES(@CompraId,@userId,@total)";
                 // Se crea el comando SQL
                 SqlCommand cmd = new SqlCommand(query, conn);
                 // Se asignan los valores desde el objeto Ventas
-                cmd.Parameters.AddWithValue("@carritoId", V.CarritoId);
+                cmd.Parameters.AddWithValue("@compraId", V.CompraId);
                 cmd.Parameters.AddWithValue("@userId", V.UserId);
                 cmd.Parameters.AddWithValue("@total", V.Total);
                 // Se abre la conexion

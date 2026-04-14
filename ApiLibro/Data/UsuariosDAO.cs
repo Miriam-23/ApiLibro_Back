@@ -76,6 +76,40 @@ namespace ApiLibro.Data
             return U;// Retorna el usuario
         }
 
+        //GET BY ID TOKEN
+        public Usuarios GetByToken(string token)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = "SELECT * FROM Usuarios WHERE TokenActivo = @Token";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Token", token);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Usuarios
+                            {
+                                Id = (int)reader["Id"],
+                                Usuario = reader["Usuario"].ToString(),
+                                Password = reader["Password"].ToString(),
+                                Rol = reader["Rol"].ToString(),
+                                Email = reader["Email"].ToString(),
+                                TokenActivo = reader["TokenActivo"]?.ToString()
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
         // INSERT
         public string Insert(Usuarios U)
         {
@@ -117,10 +151,21 @@ namespace ApiLibro.Data
         }
 
         // UPDATE
-        /*public void Update(int id, Usuarios U)
+        public void Update(int id, Usuarios U)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
-            {
+            {              
+
+                string query = "UPDATE Usuarios SET TokenActivo = @Token WHERE Id = @id";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Token", U.TokenActivo);
+                cmd.Parameters.AddWithValue("@id", U.Id);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            /*{
                 string query = @"UPDATE Usuarios SET Usuario=@usuario, Password=@password, Rol=@rol WHERE Id=@id";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
@@ -130,8 +175,8 @@ namespace ApiLibro.Data
                 cmd.Parameters.AddWithValue("@rol", U.Rol);
                 conn.Open();
                 cmd.ExecuteNonQuery();
-            }
-        }*/
+            }*/
+        }
 
         // DELETE
         /*public void Delete(int id)

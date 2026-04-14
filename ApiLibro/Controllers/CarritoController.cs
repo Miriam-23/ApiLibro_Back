@@ -1,5 +1,6 @@
 ﻿using ApiLibro.Data;
 using ApiLibro.Models;
+using ApiLibro.Handlers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ApiLibro.Controllers
 {
     // Se habilita CORS para permitir conexión con el frontend
     [EnableCors(origins: "https://localhost:44367", headers: "*", methods: "*")]
+    [CustomAuthorize]
     [RoutePrefix("api/carrito")]
     public class CarritoController : ApiController
     {
